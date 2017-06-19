@@ -21,6 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '^ezg8sp6(dg2!i!87dv0obo3!-%zxf9&(cn9e6nrd!snf_hy3^'
+STRIPE_SECRET = 'sk_test_wpITN464w9W1jNgRmBORsQGy'
+STRIPE_PUBLISHABLE = 'pk_test_o5QpdDgnGZ4jlh5YF8Xwe3BE'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'main',
     'contact',
+    'payments'
 ]
 
 MIDDLEWARE = [
@@ -123,5 +126,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATIC_URL = '/static/'
