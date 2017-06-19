@@ -90,7 +90,7 @@ def register(request):
     )
 
 def edit(request):
-    uid = request.sessions.get('user')
+    uid = request.session.get('user')
 
     if uid is None:
         return HttpResponseRedirect('/')
@@ -100,7 +100,7 @@ def edit(request):
     if request.method == 'POST':
         form = CardForm(request.POST)
         if form.is_valid():
-            customer = stripe.Customer.retrive(user.stripe_id)
+            customer = stripe.Customer.retrieve(user.stripe_id)
             customer.card = form.cleaned_data['stripe_token']
             customer.save()
 
@@ -113,7 +113,7 @@ def edit(request):
         form = CardForm()
     
     return render(
-        request_url,
+        request,
         'edit.html',
         {
             'form' : form,
