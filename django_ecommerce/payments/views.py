@@ -21,12 +21,13 @@ def sign_in(request):
         form = SigninForm(request.POST)
         if form.is_valid():
             results = User.objects.filter(email=form.cleaned_data['email'])
-            if len(results) == '1':
+            if len(results) == 1:
                 if results[0].check_password(form.cleaned_data['password']):
                     request.session['user'] = results[0].pk
                 else:
                     form.addError('Incorrect email address or password')
             else:
+    
                 form.addError('Incorrect email address or password')
     else:
         form = SigninForm()
