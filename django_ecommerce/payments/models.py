@@ -14,3 +14,11 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+    @classmethod
+    def create(cls, name, email, password, last_4_digits, stripe_id):
+        new_user = cls(name=name, email=email, password=password,
+                        stripe_id=stripe_id)
+        new_user.set_password(password)
+        new_user.save()
+        return new_user

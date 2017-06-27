@@ -60,6 +60,7 @@ def register(request):
                 card = form.cleaned_data['stripe_token'],
                 plan='gold'
             )
+            """
             user = User(
                 name = form.cleaned_data['name'],
                 email = form.cleaned_data['email'],
@@ -67,10 +68,19 @@ def register(request):
                 stripe_id = customer.id,
             )
             user.set_password(form.cleaned_data['password'])
+            """
+            cd = form.cleaned_data
             try:
+                user = User.create(
+                    cd['name'],
+                    cd['email'],
+                    cd['last_4_digits'],
+                    cd['password'],
+                    customer.id
+                )
                 user.save()
             except IntegrityError:
-                form.addError(user.email + ' is already a member')
+                form.addError(cd['email'] + ' is already a member')
             else:
                 request.session['user'] = user.pk
                 return redirect('/')
