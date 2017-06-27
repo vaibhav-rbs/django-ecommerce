@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+django1.11
 build/
 develop-eggs/
 dist/
