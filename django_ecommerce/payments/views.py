@@ -24,10 +24,10 @@ def sign_in(request):
             if len(results) == 1:
                 if results[0].check_password(form.cleaned_data['password']):
                     request.session['user'] = results[0].pk
+                    return HttpResponseRedirect('/')
                 else:
                     form.addError('Incorrect email address or password')
             else:
-    
                 form.addError('Incorrect email address or password')
     else:
         form = SigninForm()
@@ -78,6 +78,7 @@ def register(request):
                     cd['password'],
                     customer.id
                 )
+                user.set_password(cd['password'])
                 user.save()
             except IntegrityError:
                 form.addError(cd['email'] + ' is already a member')
