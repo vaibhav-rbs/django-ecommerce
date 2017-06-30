@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.utils.timezone import now
 
 
 class User(AbstractBaseUser):
@@ -10,7 +11,7 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now=True)
     update_at = models.DateField(auto_now=True)
 
-    USETNAME_FIELD = 'email'
+    USERNAME_FIELD = 'email'
 
     def __str__(self):
         return self.email
@@ -22,3 +23,8 @@ class User(AbstractBaseUser):
         new_user.set_password(password)
         new_user.save()
         return new_user
+    
+
+class UnpaidUser(models.Model):
+    email = models. CharField(max_length=255, unique=True)
+    last_notification = models.DateTimeField(default=now)
