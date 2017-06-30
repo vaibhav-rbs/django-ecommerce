@@ -17,8 +17,9 @@ class Customer(object):
                 return stripe.Customer.create(**kwargs)
             elif billing_method == "onetime":
                 return stripe.Charge.create(**kwargs)
-        except socket.error:
-            None
+        except (socket.error, stripe.APIConnectionError, 
+                stripe.InvalidRequestError):
+            return None
 
 
 
