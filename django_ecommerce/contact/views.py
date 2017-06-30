@@ -14,4 +14,4 @@ def contact(request):
             return redirect('/')
     else:
         form = ContactView()
-        return render(request, 'contact.html', { 'form':form })
+        return render(request, 'contact/contact.html', { 'form':form })

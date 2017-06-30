@@ -50,7 +50,7 @@ def sign_in(request):
 
     return render(
         request,
-        'sign_in.html',
+        'payments/sign_in.html',
         {
             'form' : form,
             'user' : user
@@ -104,7 +104,7 @@ def register(request):
 
     return render(
         request,
-        'register.html',
+        'payments/register.html',
         {
             'form' : form,
             'months': range(1, 12),
