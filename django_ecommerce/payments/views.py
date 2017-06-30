@@ -2,6 +2,7 @@ from django.db import IntegrityError
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from payments.forms import SigninForm, CardForm, UserForm
 from payments.models import User, UnpaidUser
+from django.db import transaction
 import django_ecommerce.settings as settings
 import stripe
 import datetime
@@ -74,19 +75,20 @@ def register(request):
             )
             cd = form.cleaned_data
             try:
-                user = User.create(
-                    cd['name'],
-                    cd['email'],
-                    cd['last_4_digits'],
-                    cd['password'],
-                    stripe_id = ''
-                )
-                if customer:
-                    user.stripe_id = customer.id
-                    user.set_password(cd['password'])
-                    user.save()
-                else:
-                    UnpaidUser(email=cd['email']).save()
+                with transaction.atomic():
+                    user = User.create(
+                        cd['name'],
+                        cd['email'],
+                        cd['last_4_digits'],
+                        cd['password'],
+                        stripe_id = ''
+                    )
+                    if customer:
+                        user.stripe_id = customer.id
+                        user.set_password(cd['password'])
+                        user.save()
+                    else:
+                        UnpaidUser(email=cd['email']).save()
             except IntegrityError:
                 import traceback
                 form.addError(
