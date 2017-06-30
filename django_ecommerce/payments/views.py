@@ -1,13 +1,25 @@
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from payments.forms import SigninForm, CardForm, UserForm
-from payments.models import User
+from payments.models import User, UnpaidUser
 import django_ecommerce.settings as settings
 import stripe
 import datetime
-
-
+import socket
 stripe.api_key = settings.STRIPE_SECRET
+
+class Customer(object):
+    @classmethod
+    def create(cls, billing_method="subscription", **kwargs):
+        try:
+            if billing_method == "subscription":
+                return stripe.Customer.create(**kwargs)
+            elif billing_method == "onetime":
+                return stripe.Charge.create(**kwargs)
+        except socket.error:
+            None
+
+
 
 def soon():
     soon = datetime.date.today() + datetime.timedelta(days=30)
@@ -54,21 +66,12 @@ def register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-            customer = stripe.Customer.create(
+            customer = Customer.create(
                 email=form.cleaned_data['email'],
                 description=form.cleaned_data['name'],
                 card = form.cleaned_data['stripe_token'],
                 plan='gold'
             )
-            """
-            user = User(
-                name = form.cleaned_data['name'],
-                email = form.cleaned_data['email'],
-                last_4_digits = form.cleaned_data['last_4_digits'],
-                stripe_id = customer.id,
-            )
-            user.set_password(form.cleaned_data['password'])
-            """
             cd = form.cleaned_data
             try:
                 user = User.create(
@@ -76,15 +79,23 @@ def register(request):
                     cd['email'],
                     cd['last_4_digits'],
                     cd['password'],
-                    customer.id
+                    stripe_id = ''
                 )
-                user.set_password(cd['password'])
-                user.save()
+                if customer:
+                    user.stripe_id = customer.id
+                    user.set_password(cd['password'])
+                    user.save()
+                else:
+                    UnpaidUser(email=cd['email']).save()
             except IntegrityError:
-                form.addError(cd['email'] + ' is already a member')
+                import traceback
+                form.addError(
+                    cd['email'] + ' is already a member' + traceback.format_exc(
+                    ))
+                user = None
             else:
                 request.session['user'] = user.pk
-                return redirect('/')
+                return HttpResponseRedirect('/')
     else:
         form = UserForm()
 
