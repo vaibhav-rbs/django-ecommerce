@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.timezone import now
+from main.models import Badge
 
 
 class User(AbstractBaseUser):
@@ -11,6 +12,7 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now=True)
     update_at = models.DateField(auto_now=True)
     rank = models.CharField(max_length=50, default="Padwan")
+    badges = models.ManyToManyField(Badge)
 
     USERNAME_FIELD = 'email'
 
