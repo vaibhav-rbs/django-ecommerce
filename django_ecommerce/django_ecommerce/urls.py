@@ -31,5 +31,6 @@ urlpatterns = [
     url(r'^sign_in$', payment_views.sign_in, name='sign_in'),
     url(r'^sign_out$', payment_views.sign_out, name='sign_out'),
     url(r'^register$', payment_views.register, name='register'),
-    url(r'^edit$', payment_views.edit, name='edit')
+    url(r'^edit$', payment_views.edit, name='edit'),
+    url(r'^report$', main_views.report, name="report"),
 ]

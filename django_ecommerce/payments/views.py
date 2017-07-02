@@ -59,8 +59,11 @@ def sign_in(request):
 
 
 def sign_out(request):
-    del request.session['user']
-    return redirect ('/')
+    try:
+        del request.session['user']
+        return redirect ('/')
+    except KeyError:
+        return redirect ('/')
 
 
 def register(request):
@@ -129,7 +132,6 @@ def edit(request):
             customer = stripe.Customer.retrieve(user.stripe_id)
             customer.card = form.cleaned_data['stripe_token']
             customer.save()
-
             user.last_4_digits = form.cleaned_data['last_4_digits']
             user.stripe_id = customer.id
             user.save()
@@ -138,9 +140,7 @@ def edit(request):
     else:
         form = CardForm()
     
-    return render(
-        request,
-        'edit.html',
+    return render(request, 'payments/edit.html',
         {
             'form' : form,
             'publishable' : settings.STRIPE_PUBLISHABLE,
