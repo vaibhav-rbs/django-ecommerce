@@ -13,14 +13,14 @@ class StatusCollection(mixins.ListModelMixin, mixins.CreateModelMixin, generics.
         return self.create(reqeust)
 
 
-class StatusMember(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+class StatusMember(mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = StatusReport.objects.all()
     serializer_class = StatusReportSerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-    def put(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):    
         return self.put(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):    
