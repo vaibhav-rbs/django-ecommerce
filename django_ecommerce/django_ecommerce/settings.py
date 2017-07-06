@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'main',
     'contact',
-    'payments'
+    'payments',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

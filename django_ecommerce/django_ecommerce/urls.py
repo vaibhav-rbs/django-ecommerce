@@ -33,4 +33,6 @@ urlpatterns = [
     url(r'^register$', payment_views.register, name='register'),
     url(r'^edit$', payment_views.edit, name='edit'),
     url(r'^report$', main_views.report, name="report"),
+    # DRF API EndPOINTS
+    url(r'^api/v1/', include('main.urls')),
 ]
